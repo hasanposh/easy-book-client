@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+import HoverButtun from "./HoverButtun";
 
 const NavBar = () => {
   const navLinks = (
@@ -125,7 +126,12 @@ const NavBar = () => {
             </li>
           </ul>
         </div>
-        <a className="btn">Button</a>
+        {/* login button */}
+        <Link to={"/login"}>
+          <div className="  hover:bg-slate-900 ">
+            <HoverButtun>Sign In</HoverButtun>
+          </div>
+        </Link>
       </div>
     </div>
   );
