@@ -3,20 +3,55 @@ import { Link, NavLink } from "react-router-dom";
 const NavBar = () => {
   const navLinks = (
     <>
-      <NavLink to={"/"}>
-        <a>Home</a>
+      <NavLink
+        to={"/"}
+        className={({ isActive }) =>
+          isActive
+            ? "text-blue-500 hover:text-blue-500"
+            : " hover:text-blue-500"
+        }
+      >
+        Home
       </NavLink>
-      <NavLink to={"/rooms"}>
-        <a>Rooms</a>
+      <NavLink
+        to={"/rooms"}
+        className={({ isActive }) =>
+          isActive
+            ? "text-blue-500 hover:text-blue-500"
+            : " hover:text-blue-500"
+        }
+      >
+        Rooms
       </NavLink>
-      <NavLink to={"/myBookings"}>
-        <a>My Bookings</a>
+      <NavLink
+        to={"/myBookings"}
+        className={({ isActive }) =>
+          isActive
+            ? "text-blue-500 hover:text-blue-500"
+            : " hover:text-blue-500"
+        }
+      >
+        My Bookings
       </NavLink>
-      <NavLink to={"/aboutUs"}>
-        <a>About Us</a>
+      <NavLink
+        to={"/aboutUs"}
+        className={({ isActive }) =>
+          isActive
+            ? "text-blue-500 hover:text-blue-500"
+            : " hover:text-blue-500"
+        }
+      >
+        About Us
       </NavLink>
-      <NavLink to={"/contactUs"}>
-        <a>Contact Us</a>
+      <NavLink
+        to={"/contactUs"}
+        className={({ isActive }) =>
+          isActive
+            ? "text-blue-500 hover:text-blue-500"
+            : " hover:text-blue-500"
+        }
+      >
+        Contact Us
       </NavLink>
     </>
   );
@@ -56,7 +91,7 @@ const NavBar = () => {
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal gap-5">{navLinks}</ul>
+        <ul className="menu menu-horizontal text-xl gap-5">{navLinks}</ul>
       </div>
       <div className="navbar-end">
         <div className="dropdown dropdown-end">
