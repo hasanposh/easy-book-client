@@ -8,11 +8,12 @@ import AboutUsPage from "../pages/AboutUsPage";
 import ContactUsPage from "../pages/ContactUsPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+import PrivateRoutes from "./PrivateRoutes";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root/>,
+    element: <Root />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -25,7 +26,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/myBookings",
-        element: <MyBookingsPage />,
+        element: (
+          <PrivateRoutes>
+            <MyBookingsPage />
+          </PrivateRoutes>
+        ),
       },
       {
         path: "/aboutUs",

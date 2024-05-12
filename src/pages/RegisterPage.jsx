@@ -1,13 +1,14 @@
 import toast from "react-hot-toast";
 import { updateProfile } from "firebase/auth";
-import { useContext, useState } from "react";
+import {  useState } from "react";
 // import { AuthContext } from "../providers/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { AuthContext } from "../providers/AuthProvider";
+// import { AuthContext } from "../providers/AuthProvider";
+import useAuth from "../hooks/useAuth";
 
 const RegisterPage = () => {
-  const { createUser, signOutUser } = useContext(AuthContext);
+  const { createUser, signOutUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   // const location = useLocation();
   const navigate = useNavigate();
@@ -41,12 +42,12 @@ const RegisterPage = () => {
     createUser(email, password)
       .then((request) => {
         const user = request.user;
-        // updateProfile(user, { displayName: name, photoURL: photoURL }).then(
-        //   () => {
-        //     // console.log("Display name set successfully");
-        //   }
-        // );
-        // // console.log(request.user);
+        updateProfile(user, { displayName: name, photoURL: photoURL }).then(
+          () => {
+            // console.log("Display name set successfully");
+          }
+        );
+        // console.log(request.user);
         toast("Registered Successfully");
         signOutUser();
         navigate("/login");
@@ -60,18 +61,18 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex w-full  mx-auto overflow-hidden bg-transparent rounded-lg shadow-lg  lg:max-w-7xl">
+    <div className="flex w-full  mx-auto overflow-hidden bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100 rounded-lg shadow-lg  lg:max-w-7xl">
       <div className="hidden bg-cover lg:block lg:w-1/2 bg-center bg-[linear-gradient(45deg,rgba(0,0,0,0.6),rgba(0,0,0,0.3)),url('https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg')]"></div>
 
       <div className="w-full px-6 py-8 md:px-8 lg:w-1/2">
         <div className="flex justify-center mx-auto">
           <img className="w-auto size-20" src="/hotel-svg.svg" alt="" />
         </div>
-
+<h3 className="text-4xl text-center font-Playfair py-2">Register</h3>
         <form action="" onSubmit={handleSignUp}>
           <div className="mt-4">
             <label
-              className="block mb-2 text-sm font-medium text-gray-600"
+              className="block mb-2 text-sm font-medium "
               htmlFor="LoggingEmailAddress"
             >
               Your Name
@@ -85,7 +86,7 @@ const RegisterPage = () => {
           </div>
           <div className="mt-4">
             <label
-              className="block mb-2 text-sm font-medium text-gray-600"
+              className="block mb-2 text-sm font-medium "
               htmlFor="LoggingEmailAddress"
             >
               Your Photo URL
@@ -99,7 +100,7 @@ const RegisterPage = () => {
           </div>
           <div className="mt-4">
             <label
-              className="block mb-2 text-sm font-medium text-gray-600"
+              className="block mb-2 text-sm font-medium "
               htmlFor="LoggingEmailAddress"
             >
               Email Address
@@ -115,7 +116,7 @@ const RegisterPage = () => {
           <div className="mt-4 relative ">
             <div className="flex  justify-between">
               <label
-                className="block mb-2 text-sm font-medium text-gray-600"
+                className="block mb-2 text-sm font-medium "
                 htmlFor="loggingPassword"
               >
                 Password
@@ -137,10 +138,19 @@ const RegisterPage = () => {
           </div>
           <div className="mt-6">
             <button className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
-              Sign In
+             Register
             </button>
           </div>
         </form>
+        <p className="mt-8 text-xs font-light text-center ">
+        Already have an account?
+        <Link
+          to={"/login"}
+          className="font-medium text-black hover:underline"
+        >
+          Sign In
+        </Link>
+      </p>
       </div>
     </div>
   );

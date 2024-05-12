@@ -1,7 +1,20 @@
 import { Link, NavLink } from "react-router-dom";
 import HoverButtun from "./HoverButtun";
+import useAuth from "../hooks/useAuth";
+import { Tooltip } from 'react-tooltip'
 
 const NavBar = () => {
+  const { user, signOutUser } = useAuth();
+
+  const handleSignOut = () => {
+    signOutUser()
+      .then((request) => {
+        console.log(request.user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const navLinks = (
     <>
       <NavLink
@@ -24,7 +37,8 @@ const NavBar = () => {
       >
         Rooms
       </NavLink>
-      <NavLink
+      {
+        user && <NavLink
         to={"/myBookings"}
         className={({ isActive }) =>
           isActive
@@ -34,6 +48,7 @@ const NavBar = () => {
       >
         My Bookings
       </NavLink>
+      }
       <NavLink
         to={"/aboutUs"}
         className={({ isActive }) =>
@@ -95,43 +110,41 @@ const NavBar = () => {
         <ul className="menu menu-horizontal text-xl gap-5">{navLinks}</ul>
       </div>
       <div className="navbar-end">
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-              />
+        {user && (
+          <div className="dropdown dropdown-end">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={user.displayName}
+            >
+              <div className="w-10 rounded-full">
+              <Tooltip id="my-tooltip" />
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src={user.photoURL}
+                />
+              </div>
             </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <a onClick={handleSignOut}>Logout</a>
+              </li>
+            </ul>
           </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-          >
-            <li>
-              <a className="justify-between">
-                Profile
-                <span className="badge">New</span>
-              </a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a>Logout</a>
-            </li>
-          </ul>
-        </div>
+        )}
         {/* login button */}
-        <Link to={"/login"}>
-          <div className="  hover:bg-slate-900 ">
-            <HoverButtun>Sign In</HoverButtun>
-          </div>
-        </Link>
+        {!user && (
+          <Link to={"/login"}>
+            <div className="  hover:bg-slate-900 ">
+              <HoverButtun>Sign In</HoverButtun>
+            </div>
+          </Link>
+        )}
       </div>
     </div>
   );
