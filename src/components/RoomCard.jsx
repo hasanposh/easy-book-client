@@ -15,7 +15,7 @@ const RoomCard = ({ room }) => {
   return (
     <Link
     to={`/rooms/${_id}`}
-      className=" overflow-hidden 
+      className=" overflow-hidden relative  bg-cover bg-no-repeat
         h-full w-full bg-gray-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100
          shadow-lg text-black"
     >
@@ -28,7 +28,7 @@ const RoomCard = ({ room }) => {
         </p>
       </div>
 
-      <img className="object-cover w-full h-48 mt-2" src={images[0]} alt="" />
+      <img className="object-cover w-full h-48 mt-2 transition duration-300 ease-in-out hover:scale-110" src={images[0]} alt="" />
 
       <div className="flex items-center justify-between px-4 py-2 bg-gray-900">
         <h1 className="text-lg font-bold text-white">${price_per_night}</h1>

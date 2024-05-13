@@ -9,8 +9,8 @@ const RoomsPage = () => {
   };
   return (
     <div>
-      <h2>Rooms page{rooms.length}</h2>
-      <div className="flex justify-center items-center">
+      {/* <h2>Rooms page{rooms.length}</h2> */}
+      <div className="flex justify-center items-center py-4">
       <div className="dropdown dropdown-hover ">
         <div tabIndex={0} role="button" className="btn m-1">
           Sort By Price
@@ -28,15 +28,7 @@ const RoomsPage = () => {
         </ul>
       </div>
       </div>
-      <div>
-        {/* Render list of rooms */}
-        <button onClick={() => handleSortBy("price_asc")}>
-          Sort by Price (Low to High)
-        </button>
-        <button onClick={() => handleSortBy("price_desc")}>
-          Sort by Price (High to Low)
-        </button>
-      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto gap-4 md:gap-10 ">
         {rooms.map((room) => (
           <RoomCard room={room} key={room._id} />
