@@ -5,8 +5,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import "react-datepicker/dist/react-datepicker.css";
+import useAuth from "../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const RoomDetails = () => {
+  const { user } = useAuth();
+  const userMail = user?.email;
+  const room = useLoaderData();
   const [selectedDate, setSelectedDate] = useState(new Date());
   //   console.log(selectedDate);
 
@@ -18,7 +23,6 @@ const RoomDetails = () => {
     month < 10 ? "0" + month : month
   }-${year}`;
 
-  const room = useLoaderData();
   const {
     name,
     price_per_night,
@@ -30,10 +34,50 @@ const RoomDetails = () => {
     description,
     _id,
   } = room;
+// console.log(_id)
+  const handleBooking = () => {
+    const booking = {
+      formattedDate,
+      userMail,
 
-  const handleBooking =()=>{
+      room_id: _id,
+      //   availability: false,
+    };
 
-  }
+    fetch(`${import.meta.env.VITE_API_URL}/bookings`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.insertedId) {
+          toast("Booking Successfull");
+        }
+      });
+      fetch(`${import.meta.env.VITE_API_URL}/rooms/${_id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ availability: false }),
+    })
+    .then((res) => {
+        if (!res.ok) {
+            throw new Error("Failed to update room availability");
+        }
+        return res.json();
+    })
+    .then((data) => {
+        console.log(data.message); // Log the server response
+    })
+    .catch((error) => {
+        console.error("Error updating room availability:", error);
+    });
+  };
 
   return (
     <section>
@@ -70,7 +114,9 @@ const RoomDetails = () => {
           </div>
           {/* date picker */}
           <div className="my-4">
-            <h2 className="text-2xl font-Playfair my-2">Confirm Your Booking Date</h2>
+            <h2 className="text-2xl font-Playfair my-2">
+              Confirm Your Booking Date
+            </h2>
             <DatePicker
               showIcon
               toggleCalendarOnIconClick
@@ -80,13 +126,22 @@ const RoomDetails = () => {
             />
           </div>
           <div className="flex flex-wrap justify-center">
-            <button
-              onClick={() => document.getElementById("my_modal_2").showModal()}
-              type="button"
-              className="px-8 py-3 m-8 text-lg border rounded  hover:bg-blue-400 hover:text-white"
-            >
-              Book Now
-            </button>
+          {availability ? (
+               <button
+               onClick={() => document.getElementById("my_modal_2").showModal()}
+               type="button"
+               className="px-8 py-3 m-8 text-lg border rounded  hover:bg-blue-400 hover:text-white"
+             >
+               Book Now
+             </button>
+              ) : (
+                <button
+                  className="btn bg-red-500 text-white px-8 py-3 m-8 text-lg border rounded"
+                  onClick={()=>toast('Sorry This Room is Already Booked')}
+                >
+                  Unavailable
+                </button>
+              )}
           </div>
         </div>
       </div>
