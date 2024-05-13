@@ -53,5 +53,5 @@ const ImageSwiper = ({ images }) => {
 export default ImageSwiper;
 
 ImageSwiper.propTypes = {
-  images: PropTypes.object,
+  images: PropTypes.any
 };
