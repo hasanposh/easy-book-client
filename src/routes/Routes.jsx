@@ -9,6 +9,7 @@ import ContactUsPage from "../pages/ContactUsPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import PrivateRoutes from "./PrivateRoutes";
+import RoomDetails from "../pages/RoomDetails";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +48,11 @@ export const router = createBrowserRouter([
       {
         path: "/register",
         element: <RegisterPage />,
+      },
+      {
+        path: "/rooms/:id",
+        element: <RoomDetails />,
+        loader: ({params})=> fetch(`http://localhost:5000/rooms/${params.id}`)
       },
     ],
   },
