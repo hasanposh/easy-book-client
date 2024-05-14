@@ -1,18 +1,20 @@
 import { useLoaderData } from "react-router-dom";
 import ImageSwiper from "../components/ImageSwiper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import "react-datepicker/dist/react-datepicker.css";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
+import moment from "moment";
 
 const RoomDetails = () => {
   const { user } = useAuth();
   const userMail = user?.email;
   const room = useLoaderData();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [reviews, setReviews] = useState([]);
   //   console.log(selectedDate);
 
   const date = selectedDate;
@@ -23,6 +25,8 @@ const RoomDetails = () => {
     month < 10 ? "0" + month : month
   }-${year}`;
 
+ 
+
   const {
     name,
     price_per_night,
@@ -30,17 +34,18 @@ const RoomDetails = () => {
     images,
     special_offers,
     availability,
-    reviews,
     description,
     _id,
   } = room;
-// console.log(_id)
+  // console.log(_id)
   const handleBooking = () => {
     const booking = {
       formattedDate,
       userMail,
-
+      image: images[0],
       room_id: _id,
+      room_name: name,
+      price_per_night,
       //   availability: false,
     };
 
@@ -58,27 +63,62 @@ const RoomDetails = () => {
           toast("Booking Successfull");
         }
       });
-      fetch(`${import.meta.env.VITE_API_URL}/rooms/${_id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ availability: false }),
+    fetch(`${import.meta.env.VITE_API_URL}/rooms/${_id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ availability: false }),
     })
-    .then((res) => {
+      .then((res) => {
         if (!res.ok) {
-            throw new Error("Failed to update room availability");
+          throw new Error("Failed to update room availability");
         }
         return res.json();
-    })
-    .then((data) => {
+      })
+      .then((data) => {
         console.log(data.message); // Log the server response
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         console.error("Error updating room availability:", error);
-    });
+      });
   };
 
+  const fetchInitialData = () => {
+    fetch(`${import.meta.env.VITE_API_URL}/rooms/${_id}/reviews`)
+      .then((res) => res.json())
+      .then((data) => {
+        setReviews(data);
+      });
+  };
+  useEffect(() => {
+    fetchInitialData();
+  }, []);
+  const calculatePostTime = (postTime) => {
+    const currentTime = moment();
+    const postTimeMoment = moment(postTime);
+    const timeDif = currentTime.diff(postTimeMoment);
+
+    const duration = moment.duration(timeDif);
+
+    const days = duration.asDays();
+    const hours = duration.asHours();
+    const minutes = duration.asMinutes();
+    const seconds = duration.asSeconds();
+
+    if (days > 1) {
+      return `${Math.ceil(days)} days ago`;
+    } else if (hours > 1) {
+      return `${Math.ceil(hours)} hours ago`;
+    } else if (minutes > 1) {
+      return `${Math.ceil(minutes)} minutes ago`;
+    } else if (seconds > 1) {
+      return `${Math.ceil(seconds)} seconds ago`;
+    } else {
+      return "Just now";
+    }
+  };
+  console.log(reviews);
   return (
     <section>
       <div
@@ -91,7 +131,7 @@ const RoomDetails = () => {
           className="w-5/6 mx-auto translate-y-12  rounded-lg shadow-md "
         /> */}
         <ImageSwiper images={images} />
-        <div className=" container flex flex-col  px-4  mx-auto lg:pb-56 md:py-32 md:px-10 lg:px-32 ">
+        <div className=" container flex flex-col  px-4  mx-auto  md:py-20 md:px-10 lg:px-32 ">
           <h1 className="md:text-5xl font-bold leading-none text-3xl xl:max-w-3xl font-Playfair">
             {name}
           </h1>
@@ -126,23 +166,81 @@ const RoomDetails = () => {
             />
           </div>
           <div className="flex flex-wrap justify-center">
-          {availability ? (
-               <button
-               onClick={() => document.getElementById("my_modal_2").showModal()}
-               type="button"
-               className="px-8 py-3 m-8 text-lg border rounded  hover:bg-blue-400 hover:text-white"
-             >
-               Book Now
-             </button>
-              ) : (
-                <button
-                  className="btn bg-red-500 text-white px-8 py-3 m-8 text-lg border rounded"
-                  onClick={()=>toast('Sorry This Room is Already Booked')}
-                >
-                  Unavailable
-                </button>
-              )}
+            <button
+              onClick={() => document.getElementById("my_modal_2").showModal()}
+              type="button"
+              className="px-8 py-3 m-8 text-lg border rounded  hover:bg-blue-400 hover:text-white"
+            >
+              Book Now
+            </button>
           </div>
+        </div>
+        {/* review section */}
+        <h3 className="text-6xl font-Playfair  max-w-7xl mx-auto">
+          Room Reviews
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-10 max-w-7xl mx-auto pb-10">
+          {reviews.map((review) => (
+            <div
+              key={review._id}
+              className="w-full max-w-md px-8 py-4 mt-16 bg-white rounded-lg shadow-lg "
+            >
+              <div className="flex justify-center -mt-16 md:justify-end">
+                <img
+                  className="object-cover w-20 h-20 border-2 border-black rounded-full "
+                  alt="Testimonial avatar"
+                  src={review.userPhoto}
+                />
+              </div>
+              <div className="rating">
+                <input
+                checked={parseInt(review.rating) === 1}
+                  type="radio"
+                  name="rating-2"
+                  className="mask mask-star-2 bg-orange-400"
+                />
+                <input
+                  type="radio"
+                  name="rating-2"
+                  className="mask mask-star-2 bg-orange-400"
+                  checked={parseInt(review.rating) === 2}
+                />
+                <input
+                  type="radio"
+                  name="rating-2"
+                  className="mask mask-star-2 bg-orange-400"
+                  checked={parseInt(review.rating) === 3}
+                />
+                <input
+                  type="radio"
+                  name="rating-2"
+                  className="mask mask-star-2 bg-orange-400"
+                  checked={parseInt(review.rating) === 4}
+                />
+                <input
+                  type="radio"
+                  name="rating-2"
+                  className="mask mask-star-2 bg-orange-400"
+                  checked={parseInt(review.rating) === 5}
+                />
+              </div>
+
+              <img src="/commas.svg" className="size-10" alt="" />
+              <p className="">{review.comment}</p>
+
+              <div className="flex justify-end ">
+                <img src="/commas.svg" className="size-10 " alt="" />
+              </div>
+              <div className="flex justify-end ">
+                <p className="text-lg font-medium text-blue-600 ">
+                  {review.userName}
+                </p>
+              </div>
+              <p className=" text-sm text-gray-600 flex justify-end">
+                Posted {calculatePostTime(review.postTime)} ago
+              </p>
+            </div>
+          ))}
         </div>
       </div>
       <dialog id="my_modal_2" className="modal">
@@ -161,17 +259,36 @@ const RoomDetails = () => {
               <p className="text-xl font-bold">Price : ${price_per_night}</p>
             </div>
             <div className="card-actions justify-end">
-              <button
+              {availability ? (
+                <div className="modal-action">
+                  <form method="dialog">
+                    {/* if there is a button in form, it will close the modal */}
+                    <button
+                      className="btn bg-blue-500 text-white"
+                      onClick={handleBooking}
+                    >
+                      Confirm Booking
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <button
+                  className="btn bg-red-500 text-white px-8 py-3 m-8 text-lg border rounded"
+                  onClick={() => toast("Sorry This Room is Already Booked")}
+                >
+                  Unavailable
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        {/* <form method="dialog" className="modal-backdrop">
+         <button
                 className="btn bg-blue-500 text-white"
                 onClick={handleBooking}
               >
                 Confirm Booking
               </button>
-            </div>
-          </div>
-        </div>
-        {/* <form method="dialog" className="modal-backdrop">
-          <button>close</button>
         </form> */}
       </dialog>
     </section>
