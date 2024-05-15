@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import ImageSwiper from "../components/ImageSwiper";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
@@ -24,8 +24,6 @@ const RoomDetails = () => {
   const formattedDate = `${day < 10 ? "0" + day : day}-${
     month < 10 ? "0" + month : month
   }-${year}`;
-
- 
 
   const {
     name,
@@ -166,13 +164,24 @@ const RoomDetails = () => {
             />
           </div>
           <div className="flex flex-wrap justify-center">
-            <button
-              onClick={() => document.getElementById("my_modal_2").showModal()}
-              type="button"
-              className="px-8 py-3 m-8 text-lg border rounded  hover:bg-blue-400 hover:text-white"
-            >
-              Book Now
-            </button>
+            {user ? (
+              <button
+                onClick={() =>
+                  document.getElementById("my_modal_2").showModal()
+                }
+                type="button"
+                className="px-8 py-3 m-8 text-lg border rounded  hover:bg-blue-400 hover:text-white"
+              >
+                Book Now
+              </button>
+            ) : (
+              <Link
+                to={"/login"}
+                className="px-8 py-3 m-8 text-lg border rounded  hover:bg-blue-400 hover:text-white"
+              >
+                Book Now
+              </Link>
+            )}
           </div>
         </div>
         {/* review section */}
@@ -183,7 +192,7 @@ const RoomDetails = () => {
           {reviews.map((review) => (
             <div
               key={review._id}
-              className="w-full max-w-md px-8 py-4 mt-16 bg-white rounded-lg shadow-lg "
+              className="w-full flex flex-col gap-4 max-w-md px-8 py-4 mt-16 bg-white rounded-lg shadow-lg "
             >
               <div className="flex justify-center -mt-16 md:justify-end">
                 <img
@@ -194,7 +203,7 @@ const RoomDetails = () => {
               </div>
               <div className="rating">
                 <input
-                checked={parseInt(review.rating) === 1}
+                  checked={parseInt(review.rating) === 1}
                   type="radio"
                   name="rating-2"
                   className="mask mask-star-2 bg-orange-400"
@@ -226,7 +235,7 @@ const RoomDetails = () => {
               </div>
 
               <img src="/commas.svg" className="size-10" alt="" />
-              <p className="">{review.comment}</p>
+              <p className="flex-1">{review.comment}</p>
 
               <div className="flex justify-end ">
                 <img src="/commas.svg" className="size-10 " alt="" />
@@ -237,7 +246,7 @@ const RoomDetails = () => {
                 </p>
               </div>
               <p className=" text-sm text-gray-600 flex justify-end">
-                Posted {calculatePostTime(review.postTime)} ago
+                Posted {calculatePostTime(review.postTime)}
               </p>
             </div>
           ))}

@@ -2,9 +2,9 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 // Mock hotel data
 const hotels = [
-  { id: 1, name: "Hotel A", position: [51.505, -0.09] },
-  { id: 2, name: "Hotel B", position: [51.51, -0.1] },
-  { id: 3, name: "Hotel C", position: [51.515, -0.11] },
+  { id: 1, name: "123 Main Street, Cityville, Countryland", position: [51.505, -0.09] },
+  { id: 2, name: "456 Park Avenue, Townburg, Countryland", position: [51.51, -0.1] },
+  { id: 3, name: "789 Ocean View Drive, Beachtown, Countryland", position: [51.515, -0.11] },
 ];
 
 const HotelMap = () => {

@@ -3,7 +3,7 @@ import useRooms from "../hooks/useRooms";
 
 const RoomsPage = () => {
   const { rooms, setSortBy } = useRooms();
-  console.log(rooms);
+  // console.log(rooms);
   const handleSortBy = (sortByValue) => {
     setSortBy(sortByValue);
   };

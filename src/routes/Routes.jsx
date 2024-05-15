@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
       {
         path: "/rooms/:id",
         element: <RoomDetails />,
-        loader: ({params})=> fetch(`http://localhost:5000/rooms/${params.id}`)
+        loader: ({params})=> fetch(`${import.meta.env.VITE_API_URL}/rooms/${params.id}`)
       },
     ],
   },

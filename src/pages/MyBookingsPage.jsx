@@ -7,15 +7,18 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
 import moment from "moment";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const MyBookingsPage = () => {
   const { user } = useAuth();
   const currentDate = moment();
+  const axiosSecure = useAxiosSecure();
 
   const [bookings, setBookings] = useState([]);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  console.log(currentDate._d);
+  // console.log(currentDate._d);
   //   {updated date}
   const date = selectedDate;
   const year = date.getFullYear();
@@ -25,7 +28,7 @@ const MyBookingsPage = () => {
     month < 10 ? "0" + month : month
   }-${year}`;
 
-  const handleOpenModal = (bookingId,modalNumber) => {
+  const handleOpenModal = (bookingId, modalNumber) => {
     const modal = document.getElementById(modalNumber);
     setSelectedBookingId(bookingId); // Set selected booking id
     modal.showModal();
@@ -44,39 +47,50 @@ const MyBookingsPage = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        fetchInitialData()
+        // console.log(data);
+        fetchInitialData();
         if (data.insertedId) {
           toast("Date Updated Successfully");
         }
       });
   };
-  const handleCancelBooking = (id,bookedDate,roomId) => {
-    console.log(  bookedDate);
-    const dbMomentDate=moment(bookedDate,'DD-MM-YYYY');
-    dbMomentDate.endOf('day')
-    console.log(dbMomentDate)
-    const timeDif = dbMomentDate.diff(currentDate)
-    console.log(timeDif);
-    const miliSecondDiff = moment.duration(timeDif).asMilliseconds()
-    const daysDiff = miliSecondDiff / (1000*3600*24)
-    console.log(daysDiff) 
+  const handleCancelBooking = (id, bookedDate, roomId) => {
+    // console.log(bookedDate);
+    const dbMomentDate = moment(bookedDate, "DD-MM-YYYY");
+    dbMomentDate.endOf("day");
+    // console.log(dbMomentDate);
+    const timeDif = dbMomentDate.diff(currentDate);
+    // console.log(timeDif);
+    const miliSecondDiff = moment.duration(timeDif).asMilliseconds();
+    const daysDiff = miliSecondDiff / (1000 * 3600 * 24);
+    // console.log(daysDiff);
 
-    if(daysDiff > 1){
-    fetch(`${import.meta.env.VITE_API_URL}/bookings/${id}`, {
-        method: "DELETE",
-       
-      })
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(data);
-            if (data.deletedCount > 0) {
-                toast('deleted successful');
-                const remaining = bookings.filter(booking => booking._id !== id);
+    if (daysDiff > 1) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`${import.meta.env.VITE_API_URL}/bookings/${id}`, {
+            method: "DELETE",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
+              if (data.deletedCount > 0) {
+                toast("deleted successful");
+                const remaining = bookings.filter(
+                  (booking) => booking._id !== id
+                );
                 setBookings(remaining);
-            }
-        });
-        fetch(`${import.meta.env.VITE_API_URL}/rooms/${roomId}`, {
+              }
+            });
+          fetch(`${import.meta.env.VITE_API_URL}/rooms/${roomId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -95,8 +109,10 @@ const MyBookingsPage = () => {
             .catch((error) => {
               console.error("Error updating room availability:", error);
             });
-    }else{
-        toast('You can not cancel booking before 1 day')
+        }
+      });
+    } else {
+      toast("You can not cancel booking before 1 day");
     }
   };
 
@@ -134,21 +150,34 @@ const MyBookingsPage = () => {
         }
       });
   };
-  const fetchInitialData = () =>{
-    fetch(`${import.meta.env.VITE_API_URL}/bookings?email=${user?.email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setBookings(data);
-      });
-  }
+
+  const url = `/bookings?email=${user?.email}`;
+
+  // const fetchInitialData = () =>{
+  //   fetch(`${import.meta.env.VITE_API_URL}/bookings?email=${user?.email}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setBookings(data);
+  //     });
+  // }
+
+  const fetchInitialData = () => {
+    axiosSecure.get(url).then((res) => setBookings(res.data));
+
+    // fetch(`${import.meta.env.VITE_API_URL}/bookings?email=${user?.email}`)
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setBookings(data);
+    //   });
+  };
   useEffect(() => {
-    fetchInitialData()
-// eslint-disable-next-line
-}, [user]);
+    fetchInitialData();
+    // eslint-disable-next-line
+  }, [user, axiosSecure]);
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <h2>My booking page {bookings.length}</h2>
+    <div className="max-w-7xl mx-auto min-h-screen">
+      <h2 className="text-center py-4 font-Playfair text-4xl">Your Booked Room : {bookings.length}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {bookings.map((booking) => (
           <div
@@ -165,13 +194,19 @@ const MyBookingsPage = () => {
               <p>Price: ${booking.price_per_night}</p>
               <div className="card-actions ">
                 <button
-                  onClick={() => handleOpenModal(booking._id,'my_modal_1')}
+                  onClick={() => handleOpenModal(booking._id, "my_modal_1")}
                   className="btn  text-white bg-blue-500"
                 >
                   Update Date
                 </button>
                 <button
-                  onClick={()=>handleCancelBooking(booking._id,booking.formattedDate,booking.room_id)}
+                  onClick={() =>
+                    handleCancelBooking(
+                      booking._id,
+                      booking.formattedDate,
+                      booking.room_id
+                    )
+                  }
                   className="btn  text-white bg-red-500"
                 >
                   Cancel Booking
@@ -185,7 +220,7 @@ const MyBookingsPage = () => {
                   Room Details
                 </Link>
                 <button
-                  onClick={() => handleOpenModal(booking.room_id,'my_modal_2')}
+                  onClick={() => handleOpenModal(booking.room_id, "my_modal_2")}
                   className="btn bg-gray-700 text-white"
                 >
                   Give a Review
@@ -231,7 +266,6 @@ const MyBookingsPage = () => {
             </h2>
             <form onSubmit={handleReviews} method="dialog">
               <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-                
                 <div>
                   <label className="text-gray-700 " htmlFor="username">
                     Username

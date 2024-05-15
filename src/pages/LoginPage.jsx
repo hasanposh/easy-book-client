@@ -1,45 +1,71 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 // import { AuthContext } from "../providers/AuthProvider";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
+import axios from "axios";
 
 const LoginPage = () => {
-  const { signInUser, signInWithGoogle, signInWithGitHub } =
-  useAuth();
-const location = useLocation();
-const navigate = useNavigate();
-const [showPassword, setShowPassword] = useState(false);
+  const { signInUser, signInWithGoogle } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
-const handleSignIn = (e) => {
-  e.preventDefault();
-  const email = e.target.email.value;
-  const password = e.target.password.value;
-  // console.log(location);
-  console.log(email, password);
-  signInUser(email, password)
-    .then((request) => {
-      console.log(request.user);
-      toast("Login Successful");
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    // console.log(location);
+    console.log(email, password);
+    signInUser(email, password)
+      .then((request) => {
+        const loggedInUser = request.user;
+        console.log(loggedInUser);
+        const user = { email };
+        axios
+          .post(`${import.meta.env.VITE_API_URL}/jwt`, user, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.success) {
+              toast.success("Login Successful");
+              navigate(location?.state ? location.state : "/");
+              // navigate(location?.state ? location?.state : "/");
+            }
+          });
+
+        // console.log(request.user);
+
+        // console.log(location);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast("Please Enter a Valid Email & Password");
+      });
+  };
+
+  const handleGooglelogin = async () => {
+    try {
+      const result = await signInWithGoogle();
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/jwt`,
+        { email: result?.user?.email },
+        { withCredentials: true }
+      );
+      toast.success("Login Successful");
       navigate(location?.state ? location.state : "/");
-      // console.log(location);
-    })
-    .catch((error) => {
-      console.log(error);
-      toast("Please Enter a Valid Email & Password");
-    });
-};
-
-const handleGooglelogin = () => {
-  signInWithGoogle();
-  navigate(location?.state ? location.state : "/");
-};
-const handleGitHublogin = () => {
-  signInWithGitHub();
-  navigate(location?.state ? location.state : "/");
-};
+    } catch (err) {
+      console.log(err);
+      return toast.error(err?.message);
+    }
+  };
+  // const handleGitHublogin = () => {
+  //   signInWithGitHub();
+  //   navigate(location?.state ? location.state : "/");
+  // };
   return (
     <div className="w-full max-w-sm p-6 m-auto mx-auto bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100 rounded-lg shadow-md ">
       <div className="flex justify-center mx-auto">
@@ -59,28 +85,28 @@ const handleGitHublogin = () => {
         </div>
 
         <div className="mt-4 relative ">
-            <div className="flex justify-between">
-              <label
-                className="block mb-2 text-sm font-medium "
-                htmlFor="loggingPassword"
-              >
-                Password
-              </label>
-            </div>
+          <div className="flex justify-between">
+            <label
+              className="block mb-2 text-sm font-medium "
+              htmlFor="loggingPassword"
+            >
+              Password
+            </label>
+          </div>
 
-            <input
-              id="loggingPassword"
-              className="block  w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300"
-              type={showPassword ? "text" : "password"}
-              name="password"
-            />
+          <input
+            id="loggingPassword"
+            className="block  w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300"
+            type={showPassword ? "text" : "password"}
+            name="password"
+          />
           <div
             className="absolute text-white right-3 top-10"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <FaEye /> : <FaEyeSlash />}
           </div>
-          </div>
+        </div>
 
         <div className="mt-6">
           <button className="w-full px-6 py-2.5 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
@@ -101,6 +127,7 @@ const handleGitHublogin = () => {
 
       <div className="flex items-center mt-6 -mx-2">
         <button
+          onClick={handleGooglelogin}
           type="button"
           className="flex items-center justify-center w-full px-6 py-2 mx-2 text-sm font-medium text-white transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:bg-blue-400 focus:outline-none"
         >
