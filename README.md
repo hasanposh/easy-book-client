@@ -1,4 +1,4 @@
-# Canvas Engine
+# Easy Book
 
 
 - [Live Link](https://ez-book-client.web.app) 
