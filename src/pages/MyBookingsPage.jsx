@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import moment from "moment";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet-async";
 
 const MyBookingsPage = () => {
   const { user } = useAuth();
@@ -177,6 +178,10 @@ const MyBookingsPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto min-h-screen">
+      <Helmet>
+        <title>Easy Book | My Bookings</title>
+        
+      </Helmet>
       <h2 className="text-center py-4 font-Playfair text-4xl">Your Booked Room : {bookings.length}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {bookings.map((booking) => (

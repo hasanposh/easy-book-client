@@ -4,6 +4,7 @@ import FeaturedRoom from "../components/FeaturedRoom";
 import HotelMap from "../components/HotelMap";
 import NewsLetterSection from "../components/NewsLetterSection";
 import Testimonials from "../components/Testimonials";
+import { Helmet } from "react-helmet-async";
 
 const HomePage = () => {
   const runModal = () => {
@@ -14,6 +15,10 @@ const HomePage = () => {
   }, []);
   return (
     <div>
+      <Helmet>
+        <title>Easy Book | Home</title>
+        
+      </Helmet>
       <Banner />
       <FeaturedRoom />
       <NewsLetterSection />
