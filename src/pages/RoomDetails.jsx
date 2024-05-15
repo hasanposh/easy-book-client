@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import moment from "moment";
+import { Helmet } from "react-helmet-async";
 
 const RoomDetails = () => {
   const { user } = useAuth();
@@ -119,6 +120,10 @@ const RoomDetails = () => {
   console.log(reviews);
   return (
     <section>
+      <Helmet>
+        <title>Easy Book | Room Details</title>
+        
+      </Helmet>
       <div
         className=" h-full w-full bg-gray-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100
          shadow-lg"

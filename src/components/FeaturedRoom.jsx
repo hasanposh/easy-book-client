@@ -1,5 +1,5 @@
 import useRooms from "../hooks/useRooms";
-import RoomCard from "./RoomCard";
+import FeaturedRoomCard from "./FeaturedRoomCard";
 
 const FeaturedRoom = () => {
   const { rooms } = useRooms();
@@ -9,7 +9,7 @@ const FeaturedRoom = () => {
         <h2 className="text-6xl font-Playfair py-8">Our Featured Rooms</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10 ">
         {rooms.slice(0, 6).map((room) => (
-          <RoomCard room={room} key={room._id} />
+          <FeaturedRoomCard room={room} key={room._id} />
         ))}
       </div>
     </div>

@@ -6,6 +6,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
+import { Helmet } from "react-helmet-async";
 
 const LoginPage = () => {
   const { signInUser, signInWithGoogle } = useAuth();
@@ -68,6 +69,10 @@ const LoginPage = () => {
   // };
   return (
     <div className="w-full max-w-sm p-6 m-auto mx-auto bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100 rounded-lg shadow-md ">
+      <Helmet>
+        <title>Easy Book | Login</title>
+        
+      </Helmet>
       <div className="flex justify-center mx-auto">
         <img className="w-auto size-20 " src="/hotel-svg.svg" alt="" />
       </div>
