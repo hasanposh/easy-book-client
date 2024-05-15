@@ -17,7 +17,7 @@ const RoomDetails = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [reviews, setReviews] = useState([]);
   //   console.log(selectedDate);
-
+  
   const date = selectedDate;
   const year = date.getFullYear();
   const month = date.getMonth() + 1; // Month is zero-based, so we add 1
@@ -37,6 +37,7 @@ const RoomDetails = () => {
     _id,
   } = room;
   // console.log(_id)
+  const [available, setAvailable] = useState(availability)
   const handleBooking = () => {
     const booking = {
       formattedDate,
@@ -81,6 +82,7 @@ const RoomDetails = () => {
       .catch((error) => {
         console.error("Error updating room availability:", error);
       });
+      setAvailable(false)
   };
 
   const fetchInitialData = () => {
@@ -273,7 +275,7 @@ const RoomDetails = () => {
               <p className="text-xl font-bold">Price : ${price_per_night}</p>
             </div>
             <div className="card-actions justify-end">
-              {availability ? (
+              { available ? (
                 <div className="modal-action">
                   <form method="dialog">
                     {/* if there is a button in form, it will close the modal */}

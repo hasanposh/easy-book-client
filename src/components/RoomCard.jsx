@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const RoomCard = ({ room }) => {
+const RoomCard = ({ room ,reviews}) => {
   const {
     name,
     price_per_night,
@@ -8,7 +8,6 @@ const RoomCard = ({ room }) => {
     images,
     special_offers,
     availability,
-    reviews,
     description,
     _id
   } = room;
@@ -32,7 +31,7 @@ const RoomCard = ({ room }) => {
 
       <div className="flex items-center justify-between px-4 py-2 bg-gray-900">
         <h1 className="text-lg font-bold text-white">${price_per_night}</h1>
-        <h1 className="text-lg font-bold text-white">Reviews : {reviews.length}</h1>
+        <h1 className="text-lg font-bold text-white">Reviews : {reviews[_id]}</h1>
         
       </div>
     </Link>

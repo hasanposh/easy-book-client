@@ -1,6 +1,12 @@
+import { Helmet } from "react-helmet-async";
+
 const AboutUsPage = () => {
   return (
     <div className="space-y-10">
+      <Helmet>
+        <title>Easy Book | About us</title>
+        
+      </Helmet>
         {/* header */}
         <div className="h-72  flex text-white justify-center items-center bg-center bg-cover bg-[linear-gradient(45deg,rgba(0,0,0,0.6),rgba(0,0,0,0.3)),url('https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg')]">
         <h1 className="text-3xl font-bold text-center font-Playfair">About Us</h1>
