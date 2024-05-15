@@ -78,7 +78,7 @@ const Testimonials = () => {
               return (
                 <SwiperSlide key={review._id}>
                   <div className="container flex flex-col  items-center justify-center mx-auto lg:flex-row lg:flex-wrap lg:justify-evenly lg:px-10">
-                    <div className="flex flex-col mx-4 my-6 w-96 shadow-lg">
+                    <div className="flex flex-col mx-4 my-6 md:w-96 shadow-lg">
                       <div className="px-4 py-12 rounded-t-lg flex-grow">
                         <p className="relative px-6 py-1 text-lg italic text-center dark:text-gray-800">
                           <svg

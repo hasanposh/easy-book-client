@@ -1,8 +1,18 @@
-# React + Vite
+# Canvas Engine
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+- [Live Link](https://ez-book-client.web.app) 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Features and characteristics of this website:
+
+- This is a React project where i use react routes , react toast , react helmet and etc.
+- By doing this project i learn authentication using firebase and some react packages.
+- Also i get to know about mongoDB and ExpressJS.
+- This is a hotem rooms booking Website where user can book a room for specific date.
+- Also can update and cancel the booking date.
+- This website has registration and login page so that user can personalized there information.
+- This website can filter rooms price high to low and low to high.
+- User also can give review on the room which he booked. 
+- Here are 2 npm packages name which i used in this project.
+- 1. react-leaflet
+- 2. react-helmet
