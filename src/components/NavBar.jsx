@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import HoverButtun from "./HoverButtun";
 import useAuth from "../hooks/useAuth";
-import { Tooltip } from 'react-tooltip'
+import { Tooltip } from "react-tooltip";
 
 const NavBar = () => {
   const { user, signOutUser } = useAuth();
@@ -37,18 +37,30 @@ const NavBar = () => {
       >
         Rooms
       </NavLink>
-      {
-        user && <NavLink
-        to={"/myBookings"}
-        className={({ isActive }) =>
-          isActive
-            ? "text-blue-500 hover:text-blue-500"
-            : " hover:text-blue-500"
-        }
-      >
-        My Bookings
-      </NavLink>
-      }
+      {user && (
+        <>
+          <NavLink
+            to={"/myBookings"}
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500 hover:text-blue-500"
+                : " hover:text-blue-500"
+            }
+          >
+            My Bookings
+          </NavLink>
+          <NavLink
+            to={"/myWishlist"}
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500 hover:text-blue-500"
+                : " hover:text-blue-500"
+            }
+          >
+           My Wishlist
+          </NavLink>
+        </>
+      )}
       <NavLink
         to={"/aboutUs"}
         className={({ isActive }) =>
@@ -120,11 +132,8 @@ const NavBar = () => {
               data-tooltip-content={user.displayName}
             >
               <div className="w-10 rounded-full">
-              <Tooltip id="my-tooltip" />
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src={user.photoURL}
-                />
+                <Tooltip id="my-tooltip" />
+                <img alt="Tailwind CSS Navbar component" src={user.photoURL} />
               </div>
             </div>
             <ul

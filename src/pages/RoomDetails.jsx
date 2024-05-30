@@ -9,6 +9,7 @@ import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import moment from "moment";
 import { Helmet } from "react-helmet-async";
+import { FaHeart } from "react-icons/fa";
 
 const RoomDetails = () => {
   const { user } = useAuth();
@@ -119,7 +120,33 @@ const RoomDetails = () => {
       return "Just now";
     }
   };
-  console.log(reviews);
+  // console.log(reviews);
+
+
+// wishlist handler
+
+const handleWishlist = ()=>{
+  const wishlist = {
+    userMail,
+    room_id: _id,
+  };
+  fetch(`${import.meta.env.VITE_API_URL}/wishlist`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(wishlist),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      if (data.insertedId) {
+        toast("Successfully Added This Room to Your Wishlist");
+      }
+    });
+}
+
+
   return (
     <section>
       <Helmet>
@@ -189,6 +216,12 @@ const RoomDetails = () => {
                 Book Now
               </Link>
             )}
+            <div
+                onClick={handleWishlist}
+                className="px-8 py-3 m-8 text-lg border cursor-pointer rounded flex gap-2 items-center hover:bg-blue-400 hover:text-white"
+              >
+                Add to Wishlist  <FaHeart className= " text-xl" />
+              </div>
           </div>
         </div>
         {/* review section */}

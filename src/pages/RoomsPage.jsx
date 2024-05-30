@@ -29,7 +29,9 @@ const RoomsPage = () => {
   };
   return (
     <div>
-      
+      <Helmet>
+        <title>Easy Book | Rooms</title>
+      </Helmet>
       {/* <h2>Rooms page{rooms.length}</h2> */}
       <div className="flex justify-center items-center py-4">
         <div className="dropdown dropdown-hover ">
