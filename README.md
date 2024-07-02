@@ -2,6 +2,7 @@
 
 
 - [Live Link](https://ez-book-client.web.app) 
+- [Server Link](https://github.com/hasanposh/easy-book-server) 
 
 Features and characteristics of this website:
 
@@ -16,3 +17,23 @@ Features and characteristics of this website:
 - Here are 2 npm packages name which i used in this project.
 - 1. react-leaflet
 - 2. react-helmet
+ 
+  ## Technologies Used
+- **Frontend**: React.js
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Authentication**: JWT-based authentication, Social Login,firebase
+
+## Installation Steps
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+
+2. **Install dependencies**:
+   ```bash
+   cd project-directory
+   npm install
+2. **Set up environment variables**:
+
+  - Create a .env file in the root directory.
+  - Add necessary variables (e.g., database connection, JWT secret).
